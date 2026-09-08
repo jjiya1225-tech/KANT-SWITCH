@@ -223,9 +223,15 @@ padding:9px 11px;margin-top:10px;display:none}
  #homeView.home-split{display:grid;grid-template-columns:minmax(330px,380px) 1fr;
   gap:20px;align-items:start}
  #homeView.home-split .homehead{grid-column:1/-1}
- #homeView.home-split #luxImport{margin-bottom:0;position:sticky;top:16px}
- #homeView.home-split .luxlist{max-height:calc(100vh - 300px)}
- #homeView.home-split #homeCart{grid-column:1/-1}
+ /* 목록은 왼쪽 열을 통째로 쓴다. 장바구니와 열을 나누면 떠 있는 목록이
+    장바구니를 덮는다 — 사파리는 sticky 를 격자 «칸»이 아니라 격자
+    «전체»로 가두기 때문이다. 열을 안 나누면 어느 브라우저든 안전하다.
+    top 은 붙박이 헤더(64px) 아래로 내린다. */
+ #homeView.home-split #luxImport{grid-column:1;grid-row:2/span 2;
+  margin-bottom:0;position:sticky;top:80px}
+ #homeView.home-split #brandGrid{grid-column:2;grid-row:2}
+ #homeView.home-split #homeCart{grid-column:2;grid-row:3}
+ #homeView.home-split .luxlist{max-height:calc(100vh - 270px)}
 }
 /* LUX PRO 도면에서 가져온 구성 */
 .luximp{padding:16px 20px;margin-bottom:18px}
