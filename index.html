@@ -215,6 +215,18 @@ padding:9px 11px;margin-top:10px;display:none}
 .cart{padding:18px 22px;margin-top:18px}
 .cart h3{font-size:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .cart h3 .cnt{font-size:11px;background:#eee;border-radius:20px;padding:2px 9px;color:var(--sub)}
+/* 도면에서 가져왔을 때는 두 단으로 — 왼쪽에 스위치 목록, 오른쪽에 브랜드.
+   세로로 길게 늘어놓으면 «무엇을 구성할지»와 «무엇으로 만들지»를 한눈에
+   같이 볼 수 없다.
+   좁은 화면에서는 나누지 않는다 — 브랜드 카드 3열이 무너진다. */
+@media (min-width:1120px){
+ #homeView.home-split{display:grid;grid-template-columns:minmax(330px,380px) 1fr;
+  gap:20px;align-items:start}
+ #homeView.home-split .homehead{grid-column:1/-1}
+ #homeView.home-split #luxImport{margin-bottom:0;position:sticky;top:16px}
+ #homeView.home-split .luxlist{max-height:calc(100vh - 300px)}
+ #homeView.home-split #homeCart{grid-column:1/-1}
+}
 /* LUX PRO 도면에서 가져온 구성 */
 .luximp{padding:16px 20px;margin-bottom:18px}
 .luximp h3{font-size:14px;margin-bottom:3px;display:flex;align-items:center;gap:8px}
@@ -232,6 +244,11 @@ padding:9px 11px;margin-top:10px;display:none}
 .luxrow .lbtn{border:1.5px solid var(--line);background:#fff;color:var(--accent);border-radius:8px;
  padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
 .luxrow .lbtn:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+/* 지금 구성 중인 스위치 — 브랜드를 고르는 동안 무엇을 만드는지 보여야 한다 */
+.luxrow.active{background:rgba(58,111,216,.07);box-shadow:inset 3px 0 0 var(--accent2);
+ border-radius:0 8px 8px 0;padding-left:9px;margin-left:-9px}
+.luxrow.active .lname{color:var(--accent2)}
+.luxrow.active .lbtn{border-color:var(--accent2);background:var(--accent2);color:#fff}
 .luxrow.done{opacity:.5}
 .luxrow.done .lname::after{content:' ✓';color:var(--ok)}
 .luxrow.done .lbtn{border-color:var(--line);color:var(--sub);background:#fff}
@@ -2335,10 +2352,27 @@ var LUXCUR=null;   /* 지금 구성 중인 항목 번호 */
 var LUXPEND=null;  /* 브랜드를 고르면 이어서 적용할 항목 번호 */
 function luxEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){
  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* goHome() 이 인라인으로 display:block 을 박아 CSS 의 grid 가 눌린다.
+   넓은 화면에서만 두 단이 되도록 여기서 맞춘다. */
+function luxSyncSplit(){
+ var home=document.getElementById('homeView');
+ if(!home)return;
+ var on=home.classList.contains('home-split')
+   && window.matchMedia('(min-width:1120px)').matches
+   && home.style.display!=='none';
+ if(home.style.display!=='none')home.style.display=on?'grid':'block';
+}
+window.addEventListener('resize',luxSyncSplit);
 function renderLuxImport(){
  var box=document.getElementById('luxImport'); if(!box)return;
- if(!window.LUXIMPORT||!LUXIMPORT.items.length){box.style.display='none';return;}
+ var home=document.getElementById('homeView');
+ if(!window.LUXIMPORT||!LUXIMPORT.items.length){
+  box.style.display='none';
+  if(home){home.classList.remove('home-split'); home.style.display='block';}
+  return;
+ }
  box.style.display='block';
+ if(home){home.classList.add('home-split'); luxSyncSplit();}
  var items=LUXIMPORT.items, left=items.filter(function(it){return !it.done;}).length;
  document.getElementById('luxCnt').textContent=items.length+'개';
  document.getElementById('luxSub').innerHTML= left
@@ -2353,7 +2387,8 @@ function renderLuxImport(){
    var nm=dot<0?g:g.slice(0,dot), load=dot<0?'':g.slice(dot+3);
    return '<b>'+(i+1)+'</b> '+luxEsc(nm)+(load?' <span>'+luxEsc(load)+'</span>':'');
   }).join('&nbsp; · &nbsp;');
-  return '<div class="luxrow'+(it.done?' done':'')+'">'
+  var on=(LUXPEND===it.i)||(LUXCUR===it.i);
+  return '<div class="luxrow'+(it.done?' done':'')+(on?' active':'')+'">'
    +'<div class="lmain"><div class="lname">'+luxEsc(it.room)+' '+it.gang+'구</div>'
    +(gl?'<div class="lgang">'+gl+'</div>':'')+'</div>'
    +'<button class="lbtn" onclick="luxPick('+it.i+')">'+(it.done?'다시':'구성하기')+'</button>'
@@ -2365,8 +2400,10 @@ function luxPick(i){
  if(BRAND){luxApply(i);return;}
  /* 브랜드를 아직 안 골랐다. 고르면 이어서 적용한다. */
  LUXPEND=i;
- var it=LUXIMPORT.items[i], sub=document.getElementById('luxSub');
- if(sub)sub.innerHTML='<b>'+luxEsc(it.room)+' '+it.gang+'구</b> 를 구성합니다. 아래에서 브랜드를 고르세요.';
+ var it=LUXIMPORT.items[i];
+ renderLuxImport();   /* 고른 줄에 테두리가 생긴다 */
+ var sub=document.getElementById('luxSub');
+ if(sub)sub.innerHTML='<b>'+luxEsc(it.room)+' '+it.gang+'구</b> 를 구성합니다. 오른쪽에서 브랜드를 고르세요.';
  var g=document.getElementById('brandGrid');
  if(g){ if(window.kantScrollTo)kantScrollTo(g.getBoundingClientRect().top+(window.pageYOffset||0)-10,true);
   else g.scrollIntoView({behavior:'smooth',block:'start'}); }
