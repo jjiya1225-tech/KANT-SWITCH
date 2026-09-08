@@ -239,8 +239,10 @@ padding:9px 11px;margin-top:10px;display:none}
    넓혀야 로고와 본문의 왼쪽 끝이 어긋나지 않는다. */
 html.lux3 .wrap{max-width:min(1560px,96vw)}
 @media (min-width:1320px){
+ /* 브랜드 카드는 한 줄이라 폭이 더 있어도 빈자리만 늘어난다. 가운데를
+    붙박이로 묶고, 남는 폭은 정작 읽을 것이 많은 좌우가 나눠 갖는다. */
  #homeView.home-split.has-cart{
-  grid-template-columns:minmax(300px,340px) minmax(420px,1fr) minmax(300px,360px)}
+  grid-template-columns:minmax(330px,1fr) 400px minmax(330px,1fr)}
  #homeView.home-split.has-cart #luxImport{grid-column:1;grid-row:2}
  /* 가운데 단은 브랜드 다섯을 세로로 세운다. 카드마다 큰 그림을 얹으면
     자리만 먹고 스크롤이 생기므로, 그림을 왼쪽으로 눕히고 한 줄로 줄인다. */
@@ -248,10 +250,10 @@ html.lux3 .wrap{max-width:min(1560px,96vw)}
   grid-template-columns:1fr;gap:10px;padding-bottom:0;
   max-height:calc(100vh - 215px);overflow-y:auto}
  #homeView.home-split.has-cart .bcard{
-  display:grid;grid-template-columns:116px 1fr;
+  display:grid;grid-template-columns:104px 1fr;
   grid-template-areas:'thumb row' 'thumb tag' 'thumb meta';
   align-content:center;align-items:center;column-gap:13px;row-gap:1px;padding:11px}
- #homeView.home-split.has-cart .bcard .bthumb{grid-area:thumb;height:60px;padding:7px 9px}
+ #homeView.home-split.has-cart .bcard .bthumb{grid-area:thumb;height:60px;padding:7px 8px}
  #homeView.home-split.has-cart .bcard .brow{grid-area:row;gap:8px}
  #homeView.home-split.has-cart .bcard .btag{grid-area:tag;font-size:11px;line-height:1.35}
  #homeView.home-split.has-cart .bcard .bmeta{grid-area:meta;font-size:10.5px;line-height:1.35}
