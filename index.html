@@ -215,6 +215,21 @@ padding:9px 11px;margin-top:10px;display:none}
 .cart{padding:18px 22px;margin-top:18px}
 .cart h3{font-size:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .cart h3 .cnt{font-size:11px;background:#eee;border-radius:20px;padding:2px 9px;color:var(--sub)}
+/* LUX PRO 도면에서 가져온 구성 */
+.luximp{padding:18px 22px;margin-bottom:18px;border-color:var(--accent2)}
+.luximp h3{font-size:14px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.luximp h3 .cnt{font-size:11px;background:rgba(58,111,216,.1);border-radius:20px;padding:2px 9px;color:var(--accent2);font-weight:700}
+.luximp .lsub{font-size:12px;color:var(--sub);margin-bottom:10px;word-break:keep-all;line-height:1.5}
+.luxrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.luxrow .lmain{flex:1;min-width:0}
+.luxrow .lname{font-size:13px;font-weight:700}
+.luxrow .lgang{font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.45;word-break:keep-all}
+.luxrow .lbtn{border:1.5px solid var(--accent2);background:#fff;color:var(--accent2);border-radius:8px;
+ padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.luxrow .lbtn:hover{background:var(--accent2);color:#fff}
+.luxrow.done{opacity:.48}
+.luxrow.done .lbtn{border-color:var(--line);color:var(--sub);background:#fff}
+.posbtn .pl{font-size:10px;color:var(--accent2);margin-top:3px;line-height:1.3;word-break:keep-all}
 .citem{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:9px;font-size:12.5px}
 .citem .ct{font-weight:600;display:flex;justify-content:space-between;gap:8px}
 .citem .cd{color:var(--sub);font-size:11.5px;margin-top:3px;word-break:keep-all}
@@ -428,6 +443,11 @@ html.flow .thumbs{max-height:calc(var(--vh,100vh) * .56)}
 <h1>스위치 구성기</h1>
 <p>구성할 스위치를 선택하세요. 구성한 내역은 브랜드가 달라도 하나의 견적 요청서로 묶입니다.</p>
 </div>
+<section class="card luximp" id="luxImport" style="display:none">
+<h3>LUX PRO 도면에서 가져옴 <span class="cnt" id="luxCnt">0개</span></h3>
+<div class="lsub" id="luxSub"></div>
+<div id="luxList"></div>
+</section>
 <div class="bgrid" id="brandGrid"></div>
 <section class="card cart" id="homeCart" style="display:none;margin-top:22px">
 <h3>구성 목록 <span class="cnt" id="cartCntHome">0건</span></h3>
@@ -1116,27 +1136,6 @@ const DIA={
 const JUNG={"materials":[{"id":"duro","name":"듀로플라스틱","note":"프레임 1~5구","colors":[{"name":"White","ko":"화이트","hex":"#f3f2ec","dark":false},{"name":"Ivory","ko":"아이보리","hex":"#ece3d0","dark":false},{"name":"Light Grey","ko":"라이트그레이","hex":"#c7c8c2","dark":false},{"name":"Black","ko":"블랙","hex":"#2a2a2a","dark":true}]},{"id":"matt","name":"무광 래커","note":"프레임 1~5구","colors":[{"name":"Matt Snow White","ko":"무광 스노우화이트","hex":"#ecebe4","dark":false},{"name":"Matt Graphite Black","ko":"무광 그래파이트블랙","hex":"#37383b","dark":true}]},{"id":"metal","name":"메탈","note":"프레임 1~5구","colors":[{"name":"Stainless Steel","ko":"스테인리스 스틸","hex":"#b9bdc1","dark":false},{"name":"Aluminium","ko":"알루미늄","hex":"#c6c9cd","dark":false},{"name":"Anthracite","ko":"안트라사이트","hex":"#3c4042","dark":true},{"name":"Aluminium Dark","ko":"알루미늄 다크","hex":"#4a4d50","dark":true}]},{"id":"brass","name":"브라스","note":"프레임 1~5구","colors":[{"name":"Classic Brass","ko":"클래식 브라스","hex":"#b3904f","dark":false},{"name":"Antique Brass","ko":"앤티크 브라스","hex":"#8a6e3d","dark":true}]}],"wallbox":[{"id":"m1","name":"매립박스 1구 (Metal)","code":"BS6042M-50","price":2900},{"id":"p1a","name":"매립박스 1구 (Plastic 47mm)","code":"9063-02","price":4000},{"id":"p1b","name":"매립박스 1구 (Plastic 61mm)","code":"9064-02","price":4000},{"id":"p2","name":"매립박스 2구 (Plastic)","code":"9252-22","price":7000},{"id":"p3","name":"매립박스 3구 (Plastic)","code":"9253-22","price":10200},{"id":"p4","name":"매립박스 4구 (Plastic)","code":"9254-22","price":12000}],"prices":{"White":{"frame":{"1":5600,"2":9800,"3":14700,"4":26300,"5":37800},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":18500},{"name":"1회로 스위치 (4로)","type":"j_r1","price":34000},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":33000},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":20300},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":45200},{"name":"2회로 스위치 (단로)","type":"j_r2","price":28700},{"name":"2회로 스위치 (3로)","type":"j_r2","price":43000},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":69500},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":43700},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":48600},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":63000},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":206800},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":100600},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":310500},{"name":"220V 콘센트","type":"j_sock","price":16100},{"name":"220V 방우형 콘센트","type":"j_sockw","price":26800},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":134000},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":134000},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":134000},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":44500},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":59300},{"name":"TV 소켓 (1방)","type":"j_tv1","price":40100},{"name":"TV 소켓 (2방)","type":"j_tv2","price":40400},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":30800},{"name":"스피커 잭 (2쌍)","type":"j_spk2","price":43400},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":14200},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":125700},{"name":"HDMI소켓 1구","type":"j_hdmi","price":154000}]},"Ivory":{"frame":{"1":5600,"2":9800,"3":14700,"4":26300,"5":37800},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":18500},{"name":"1회로 스위치 (4로)","type":"j_r1","price":34000},{"name":"1회로 스위치 (일괄소등 전용)","type":"j_r1","price":33000},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":20300},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":45200},{"name":"2회로 스위치 (단로)","type":"j_r2","price":28700},{"name":"2회로 스위치 (3로)","type":"j_r2","price":43000},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":69500},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":43700},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":48600},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":63000},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":206800},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":100600},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":3010500},{"name":"220V 콘센트","type":"j_sock","price":16100},{"name":"220V 방우형 콘센트","type":"j_sockw","price":26800},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":134000},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":134000},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":134000},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":44500},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":59300},{"name":"TV 소켓 (1방)","type":"j_tv1","price":35800},{"name":"TV 소켓 (2방)","type":"j_tv2","price":36100},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":30800},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":14400},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":125700},{"name":"HDMI소켓 1구","type":"j_hdmi","price":169600}]},"Light Grey":{"frame":{"1":9200,"2":15000,"3":23600,"4":35100,"5":49000},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":23800},{"name":"1회로 스위치 (4로)","type":"j_r1","price":39300},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":38300},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":25600},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":50500},{"name":"2회로 스위치 (단로)","type":"j_r2","price":34600},{"name":"2회로 스위치 (3로)","type":"j_r2","price":48900},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":75400},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":49600},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":54500},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":68800},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":215100},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":108900},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":318800},{"name":"220V 콘센트","type":"j_sock","price":21000},{"name":"220V 방우형 콘센트","type":"j_sockw","price":29700},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":139700},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":139700},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":139700},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":50100},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":62400},{"name":"TV 소켓 (1방)","type":"j_tv1","price":43900},{"name":"TV 소켓 (2방)","type":"j_tv2","price":44200},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":35700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":19800},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":130200},{"name":"HDMI소켓 1구","type":"j_hdmi","price":159800}]},"Black":{"frame":{"1":9200,"2":15000,"3":23600,"4":35100,"5":49000},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":23800},{"name":"1회로 스위치 (4로)","type":"j_r1","price":39300},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":38300},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":25600},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":50500},{"name":"2회로 스위치 (단로)","type":"j_r2","price":34600},{"name":"2회로 스위치 (3로)","type":"j_r2","price":48900},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":75400},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":49600},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":54500},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":68800},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":215100},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":108900},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":318800},{"name":"220V 콘센트","type":"j_sock","price":21000},{"name":"220V 방우형 콘센트","type":"j_sockw","price":29700},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":139700},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":139700},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":139700},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":50100},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":62400},{"name":"TV 소켓 (1방)","type":"j_tv1","price":43900},{"name":"TV 소켓 (2방)","type":"j_tv2","price":44200},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":35700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":19800},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":130200},{"name":"HDMI소켓 1구","type":"j_hdmi","price":159800}]},"Matt Snow White":{"frame":{"1":14000,"2":20200,"3":34500,"4":55100,"5":84500},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":26700},{"name":"1회로 스위치 (4로)","type":"j_r1","price":42200},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":41200},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":28500},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":53400},{"name":"2회로 스위치 (단로)","type":"j_r2","price":37700},{"name":"2회로 스위치 (3로)","type":"j_r2","price":52000},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":78500},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":52700},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":57600},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":74200},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":227800},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":121600},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":331500},{"name":"220V 콘센트","type":"j_sock","price":28000},{"name":"220V 방우형 콘센트","type":"j_sockw","price":38900},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":152300},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":152300},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":152300},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":53900},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":66200},{"name":"TV 소켓 (1방)","type":"j_tv1","price":48800},{"name":"TV 소켓 (2방)","type":"j_tv2","price":49100},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":38700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":25300},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":134000},{"name":"HDMI소켓 1구","type":"j_hdmi","price":186800}]},"Matt Graphite Black":{"frame":{"1":14000,"2":20200,"3":34500,"4":55100,"5":84500},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":26700},{"name":"1회로 스위치 (4로)","type":"j_r1","price":42200},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":41200},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":28500},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":53400},{"name":"2회로 스위치 (단로)","type":"j_r2","price":37700},{"name":"2회로 스위치 (3로)","type":"j_r2","price":52000},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":78500},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":52700},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":57600},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":74200},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":227800},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":121600},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":331500},{"name":"220V 콘센트","type":"j_sock","price":28000},{"name":"220V 방우형 콘센트","type":"j_sockw","price":38900},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":152300},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":152300},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":152300},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":53900},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":66200},{"name":"TV 소켓 (1방)","type":"j_tv1","price":48800},{"name":"TV 소켓 (2방)","type":"j_tv2","price":49100},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":38700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":25300},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":134000},{"name":"HDMI소켓 1구","type":"j_hdmi","price":186800}]},"Stainless Steel":{"frame":{"1":23600,"2":36400,"3":60400,"4":96600,"5":153300},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":29400},{"name":"1회로 스위치 (4로)","type":"j_r1","price":44900},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":43900},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":31200},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":56100},{"name":"2회로 스위치 (단로)","type":"j_r2","price":40600},{"name":"2회로 스위치 (3로)","type":"j_r2","price":54900},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":81400},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":55600},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":60500},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":75400},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":244000},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":137800},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":347700},{"name":"220V 콘센트","type":"j_sock","price":31900},{"name":"220V 방우형 콘센트","type":"j_sockw","price":40300},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":199600},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":57800},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":81900},{"name":"TV 소켓 (1방)","type":"j_tv1","price":52000},{"name":"TV 소켓 (2방)","type":"j_tv2","price":52300},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":43400},{"name":"스피커 잭 (2쌍)","type":"j_spk2","price":54000},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":28100},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":137900},{"name":"HDMI소켓 1구","type":"j_hdmi","price":167800}]},"Aluminium":{"frame":{"1":23600,"2":36400,"3":60400,"4":96600,"5":153300},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":29400},{"name":"1회로 스위치 (4로)","type":"j_r1","price":44900},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":43900},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":31200},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":56100},{"name":"2회로 스위치 (단로)","type":"j_r2","price":40600},{"name":"2회로 스위치 (3로)","type":"j_r2","price":54900},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":81400},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":55600},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":60500},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":75400},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":244000},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":137800},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":347700},{"name":"220V 콘센트","type":"j_sock","price":31900},{"name":"220V 방우형 콘센트","type":"j_sockw","price":40300},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":199600},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":57800},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":81900},{"name":"TV 소켓 (1방)","type":"j_tv1","price":52000},{"name":"TV 소켓 (2방)","type":"j_tv2","price":52300},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":43400},{"name":"스피커 잭 (2쌍)","type":"j_spk2","price":54000},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":28100},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":137900},{"name":"HDMI소켓 1구","type":"j_hdmi","price":167800}]},"Anthracite":{"frame":{"1":23600,"2":36400,"3":60400,"4":96600,"5":153300},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":29400},{"name":"1회로 스위치 (4로)","type":"j_r1","price":44900},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":43900},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":31200},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":56100},{"name":"2회로 스위치 (단로)","type":"j_r2","price":40600},{"name":"2회로 스위치 (3로)","type":"j_r2","price":54900},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":81400},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":55600},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":60500},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":75400},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":244000},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":137800},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":347700},{"name":"220V 콘센트","type":"j_sock","price":31900},{"name":"220V 방우형 콘센트","type":"j_sockw","price":40300},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":199600},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":199600},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":57800},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":81900},{"name":"TV 소켓","type":"j_tv1","price":52000},{"name":"TV 소켓 (2방)","type":"j_tv2","price":52300},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":43400},{"name":"스피커 잭 (2쌍)","type":"j_spk2","price":54000},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":28100},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":137900},{"name":"HDMI소켓 1구","type":"j_hdmi","price":167800}]},"Aluminium Dark":{"frame":{"1":26400,"2":40600,"3":67700,"4":108000,"5":171300},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":31200},{"name":"1회로 스위치 (4로)","type":"j_r1","price":46700},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":45700},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":33000},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":157900},{"name":"2회로 스위치 (단로)","type":"j_r2","price":43100},{"name":"2회로 스위치 (3로)","type":"j_r2","price":57400},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":83900},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":58100},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":63000},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":78300},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":252100},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":145900},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":355800},{"name":"220V 콘센트","type":"j_sock","price":35400},{"name":"220V 방우형 콘센트","type":"j_sockw","price":45000},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":203800},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":203800},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":203800},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":60100},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":84100},{"name":"TV 소켓 (1방)","type":"j_tv1","price":58800},{"name":"TV 소켓 (2방)","type":"j_tv2","price":59100},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":45700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":31700},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":140200},{"name":"HDMI소켓 1구","type":"j_hdmi","price":259600}]},"Classic Brass":{"frame":{"1":46300,"2":72000,"3":120100,"4":208200,"5":342600},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":43100},{"name":"1회로 스위치 (4로)","type":"j_r1","price":58600},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":57600},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":44900},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":69800},{"name":"2회로 스위치 (단로)","type":"j_r2","price":54000},{"name":"2회로 스위치 (3로)","type":"j_r2","price":68300},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":94800},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":69000},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":73900},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":90300},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":262400},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":156200},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":366100},{"name":"220V 콘센트","type":"j_sock","price":46300},{"name":"220V 방우형 콘센트","type":"j_sockw","price":57300},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":219600},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":219600},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":219600},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":68100},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":83700},{"name":"TV 소켓 (1방)","type":"j_tv1","price":79700},{"name":"TV 소켓 (2방)","type":"j_tv2","price":80000},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":53700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":42100},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":148200}]},"Antique Brass":{"frame":{"1":46300,"2":72000,"3":120100,"4":208200,"5":342600},"functions":[{"name":"1회로 스위치 (단로/3로)","type":"j_r1","price":43100},{"name":"1회로 스위치 (4로)","type":"j_r1","price":58600},{"name":"1회로 스위치 (일괄소등)","type":"j_r1","price":57600},{"name":"1회로 스위치 (모멘터리 1접점)","type":"j_r1","price":44900},{"name":"1회로 스위치 (모멘터리 2접점)","type":"j_r1","price":69800},{"name":"2회로 스위치 (단로)","type":"j_r2","price":54000},{"name":"2회로 스위치 (3로)","type":"j_r2","price":68300},{"name":"2회로 스위치 (일괄소등)","type":"j_r2","price":94800},{"name":"2회로 스위치 (모멘터리 2접점)","type":"j_r2","price":69000},{"name":"2회로 스위치 (모멘터리 4접점)","type":"j_r2","price":73900},{"name":"3회로 스위치 (단로/3로)","type":"j_r3","price":90300},{"name":"로터리 스위치 위상제어 (일반500W / LED100W)","type":"j_rot","price":262400},{"name":"로터리 스위치 (1-10V)","type":"j_rot","price":156200},{"name":"로터리 스위치 (DALI + Tunable white)","type":"j_rot","price":366100},{"name":"220V 콘센트","type":"j_sock","price":46300},{"name":"220V 방우형 콘센트","type":"j_sockw","price":57300},{"name":"220V 콘센트(USB 결합형/A포트/고속충전)","type":"j_sockusb","price":219600},{"name":"220V 콘센트(USB 결합형/C포트/고속충전)","type":"j_sockusb","price":219600},{"name":"220V 콘센트(USB 결합형/A+C포트)","type":"j_sockusb","price":219600},{"name":"TEL/LAN 소켓 1구","type":"j_data1","price":68100},{"name":"TEL/LAN 소켓 2구","type":"j_data2","price":83700},{"name":"TV 소켓 (1방)","type":"j_tv1","price":79700},{"name":"TV 소켓 (2방)","type":"j_tv2","price":80000},{"name":"스피커 잭 (1쌍)","type":"j_spk1","price":53700},{"name":"Blank 커버 (매립박스 제외)","type":"j_blank","price":42100},{"name":"USB Charger 소켓(A+C포트)","type":"j_usb","price":148200}]}}};
 
 const BRANDS=[
- {id:'jung',   name:'JUNG LS990', ko:'융 LS990',     maker:'JUNG',    logo:'JU',
-  tagline:'독일 · 미니멀 플랫 디자인',   accent:'#111111',
-  kind:'euro', maxGang:5, unitWord:'구', posWord:'위치', hasFrame:true, frameLabel:'LS990 프레임',
-  cellAR:1, plateW:function(n){return (70*n+11)/81;}, padX:5.5/81, plateRadius:2, band:{y:0.0679,h:0.8642}, priced:true,
-  opening:false, openH:1.0, seams:false,
-  frameSize:function(n){return (70*n+11)+' × 81 mm';},
-  sample:{color:'White',mods:['j_r2','j_sock','j_data1']},
-  ready:true, data:JUNG},
- {id:'rhythmica', name:'RHYTHMICA', ko:'리드미카', maker:'RION de MIKA', logo:'RM',
-  tagline:'유러피언 스타일 · 프레임리스', accent:'#1c2430', codePrefix:'RM1-',
-  kind:'euro', maxGang:8, unitWord:'구', posWord:'위치', hasFrame:true, frameLabel:'RHYTHMICA 프레임',
-  opening:false, openH:1.0,
-  padX:0, band:{y:0,h:1}, priced:true,
-  framePair:{5:'3구+2구',6:'3구+3구',7:'4구+3구',8:'4구+4구'},
-  sample:{color:'white',mods:['sw2','socket','datatv']}, ready:true, data:RHYTHMICA},
- {id:'dia', name:'DIA', ko:'서울산전 다이아', maker:'서울산전', logo:'SD',
-  tagline:'국내 표준 매입형 · 심플 플랫', accent:'#1f3a93',
-  kind:'euro', maxGang:5, unitWord:'장', posWord:'칸', hasFrame:false, finished:true,
-  priced:true, pruneZero:true,
-  sample:{color:'화이트',mods:['3구 스위치','매입 2구 콘센트','CATV(2)+8P (1개용)']},
-  ready:true, data:DIA},
  {id:'galion', name:'GALION UP',  ko:'르그랑 갈리온', maker:'Legrand', logo:'LG',
   tagline:'유럽형 프레임리스 · 칸별 자유 조합', accent:'#c8102e',
   kind:'euro', maxGang:5, unitWord:'개용', posWord:'칸', hasFrame:false, opening:false, openH:1.0,
@@ -1152,7 +1151,32 @@ const BRANDS=[
   kind:'euro', maxGang:5, unitWord:'장', posWord:'칸', hasFrame:false, finished:true,
   priced:true, pruneZero:true,
   sample:{color:'화이트',mods:['3구 스위치','매입 2구 콘센트','CATV 2방 + 8P 2구 (1개용)']},
-  ready:true, data:AFFELA}
+  ready:true, data:AFFELA},
+ {id:'rhythmica', name:'RHYTHMICA', ko:'리드미카', maker:'RION de MIKA', logo:'RM',
+  tagline:'유러피언 스타일 · 프레임리스', accent:'#1c2430', codePrefix:'RM1-',
+  kind:'euro', maxGang:8, unitWord:'구', posWord:'위치', hasFrame:true, frameLabel:'RHYTHMICA 프레임',
+  opening:false, openH:1.0,
+  padX:0, band:{y:0,h:1}, priced:true,
+  framePair:{5:'3구+2구',6:'3구+3구',7:'4구+3구',8:'4구+4구'},
+  sample:{color:'white',mods:['sw2','socket','datatv']}, ready:true, data:RHYTHMICA},
+ {id:'dia', name:'DIA', ko:'서울산전 다이아', maker:'서울산전', logo:'SD',
+  tagline:'국내 표준 매입형 · 심플 플랫', accent:'#1f3a93',
+  kind:'euro', maxGang:5, unitWord:'장', posWord:'칸', hasFrame:false, finished:true,
+  priced:true, pruneZero:true,
+  sample:{color:'화이트',mods:['3구 스위치','매입 2구 콘센트','CATV(2)+8P (1개용)']},
+  ready:true, data:DIA},
+ /* 융 — 공급사 요청으로 노출 중단 (2026-09-01). hidden:true 면 홈에서 감춰지고
+    직접 주소(#/jung)로도 안 열린다. 데이터·가격·렌더러는 그대로 두었으니
+    다시 열려면 이 줄의 hidden 만 지우면 된다. */
+ {id:'jung',   hidden:true,
+  name:'JUNG LS990', ko:'융 LS990',     maker:'JUNG',    logo:'JU',
+  tagline:'독일 · 미니멀 플랫 디자인',   accent:'#111111',
+  kind:'euro', maxGang:5, unitWord:'구', posWord:'위치', hasFrame:true, frameLabel:'LS990 프레임',
+  cellAR:1, plateW:function(n){return (70*n+11)/81;}, padX:5.5/81, plateRadius:2, band:{y:0.0679,h:0.8642}, priced:true,
+  opening:false, openH:1.0, seams:false,
+  frameSize:function(n){return (70*n+11)+' × 81 mm';},
+  sample:{color:'White',mods:['j_r2','j_sock','j_data1']},
+  ready:true, data:JUNG}
 ];
 let BRAND=null, DATA=null;
 window.ASSETS=window.ASSETS||null;   /* 브랜드 전환 시 openBrand()가 교체 */
@@ -2092,9 +2116,10 @@ function renderBuilder(){
  document.getElementById('posbtns').innerHTML=seq.map(function(i){
   var mid=state.mods[i];
   var sp=fnSpan(mid), lbl=(sp>1)?((i+1)+'-'+(i+sp)+'번'):((i+1)+'번');
-  if(!mid) return '<button class="posbtn empty" onclick="openPicker('+i+')"><div class="pi">'+lbl+'</div><div class="pn">＋ 선택</div></button>';
+  var lx=luxGangLabel(i), lxh=lx?'<div class="pl">'+luxEsc(lx)+'</div>':'';
+  if(!mid) return '<button class="posbtn empty" onclick="openPicker('+i+')"><div class="pi">'+lbl+'</div><div class="pn">＋ 선택</div>'+lxh+'</button>';
   var f=funcByName(mid);
-  return '<button class="posbtn'+(sp>1?' wide':'')+'" onclick="openPicker('+i+')"><div class="pi">'+lbl+'</div><div class="pn">'+f.name+'</div>'+(NP()?'':'<div class="pp">'+won(f.price||0)+'</div>')+'</button>';
+  return '<button class="posbtn'+(sp>1?' wide':'')+'" onclick="openPicker('+i+')"><div class="pi">'+lbl+'</div><div class="pn">'+f.name+'</div>'+(NP()?'':'<div class="pp">'+won(f.price||0)+'</div>')+lxh+'</button>';
  }).join('');
 }
 /* 부속 이름 표기 (구 수 반영) */
@@ -2285,7 +2310,7 @@ function brandThumb(b){
  return previewFrameSVG(co.hex,co.dark,b.sample.mods,false,b.cellAR,{knob:(b.knobs||[]).find(function(k){return k.name===b.sample.knob;}),plateW:b.plateW,padX:b.padX,band:b.band,emptyW:b.emptyW,emptyH:b.emptyH,plateRadius:b.plateRadius,openH:b.openH,emptyCY:b.emptyCY,seams:b.seams});
 }
 function renderHome(){
- document.getElementById('brandGrid').innerHTML=BRANDS.map(function(b){
+ document.getElementById('brandGrid').innerHTML=BRANDS.filter(function(b){return !b.hidden;}).map(function(b){
   var meta=b.ready?(b.data.materials.reduce(function(a,m){return a+m.colors.length;},0)+'색 · 1~'+b.maxGang+(b.unitWord||'구')):'';
   return '<button class="bcard'+(b.ready?'':' off')+'"'+(b.ready?' onclick="openBrand(\''+b.id+'\')"':' disabled')+'>'
    +'<div class="bthumb">'+brandThumb(b)+'</div>'
@@ -2294,9 +2319,63 @@ function renderHome(){
    +'<div class="btag">'+b.tagline+'</div>'
    +(meta?'<div class="bmeta">'+meta+'</div>':'')+'</button>';
  }).join('');
+ renderLuxImport();
+}
+/* ---------- LUX PRO 연동 ----------
+   LUX PRO 회로도가 이미 아는 것 — 어느 공간에 몇 구 스위치가 있고 각 구가
+   무엇을 켜는지 — 을 받아 온다. 고객은 브랜드와 색만 고르면 된다.
+   LUXIMPORT 는 part5 에서 주소창 해시를 읽어 채운다. */
+var LUXCUR=null;   /* 지금 구성 중인 항목 번호 */
+var LUXPEND=null;  /* 브랜드를 고르면 이어서 적용할 항목 번호 */
+function luxEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){
+ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function renderLuxImport(){
+ var box=document.getElementById('luxImport'); if(!box)return;
+ if(!window.LUXIMPORT||!LUXIMPORT.items.length){box.style.display='none';return;}
+ box.style.display='block';
+ var items=LUXIMPORT.items, left=items.filter(function(it){return !it.done;}).length;
+ document.getElementById('luxCnt').textContent=items.length+'개';
+ document.getElementById('luxSub').innerHTML=
+  (LUXIMPORT.title?'<b>'+luxEsc(LUXIMPORT.title)+'</b> · ':'')
+  +'도면에서 스위치 '+items.length+'개를 받았습니다.'
+  +(left?' 하나씩 눌러 브랜드와 색을 고르면 구성 목록에 담깁니다.':' 모두 담았습니다.');
+ document.getElementById('luxList').innerHTML=items.map(function(it){
+  var gl=(it.gangs||[]).map(function(g,i){return (i+1)+'. '+(g?luxEsc(g):'미지정');}).join(' · ');
+  return '<div class="luxrow'+(it.done?' done':'')+'">'
+   +'<div class="lmain"><div class="lname">'+luxEsc(it.room)+' '+it.gang+'구</div>'
+   +(gl?'<div class="lgang">'+gl+'</div>':'')+'</div>'
+   +'<button class="lbtn" onclick="luxPick('+it.i+')">'+(it.done?'다시 구성':'구성하기')+'</button>'
+   +'</div>';
+ }).join('');
+}
+function luxPick(i){
+ if(!window.LUXIMPORT||!LUXIMPORT.items[i])return;
+ if(BRAND){luxApply(i);return;}
+ /* 브랜드를 아직 안 골랐다. 고르면 이어서 적용한다. */
+ LUXPEND=i;
+ var it=LUXIMPORT.items[i], sub=document.getElementById('luxSub');
+ if(sub)sub.innerHTML='<b>'+luxEsc(it.room)+' '+it.gang+'구</b> 를 구성합니다. 아래에서 브랜드를 고르세요.';
+ var g=document.getElementById('brandGrid');
+ if(g){ if(window.kantScrollTo)kantScrollTo(g.getBoundingClientRect().top+(window.pageYOffset||0)-10,true);
+  else g.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+function luxApply(i){
+ var it=window.LUXIMPORT&&LUXIMPORT.items[i]; if(!it||!BRAND)return;
+ LUXCUR=i; LUXPEND=null;
+ pickGang(Math.max(1,Math.min(it.gang,maxGang())));
+ var nf=document.getElementById('cfgName'); if(nf)nf.value=it.room;
+ var qe=document.getElementById('qty'); if(qe)qe.value=1;
+ renderQuote(); updateAddLabel();
+ goStep(1);
+}
+/* 구를 고를 때 그 구가 무엇을 켜는지 옆에 적어 준다 */
+function luxGangLabel(i){
+ if(LUXCUR==null||!window.LUXIMPORT)return '';
+ var it=LUXIMPORT.items[LUXCUR]; if(!it)return '';
+ return (it.gangs||[])[i]||'';
 }
 function openBrand(id){
- var b=brandById(id); if(!b||!b.ready)return;
+ var b=brandById(id); if(!b||!b.ready||b.hidden)return;
  BRAND=b; DATA=b.data; window.ASSETS=b.assets||null;
  state={material:DATA.materials[0].id,color:DATA.materials[0].colors[0].name,knob:(b.sample&&b.sample.knob)||(b.knobs&&b.knobs[0].name)||null,gang:1,plate:null,mods:[null],wallboxQty:{}};
  editIdx=null;
@@ -2325,6 +2404,7 @@ function openBrand(id){
  var q=document.getElementById('qty'); if(q)q.value=1;
  var nf=document.getElementById('cfgName'); if(nf)nf.value='';
  renderAll(); renderCart(); updateAddLabel();
+ LUXCUR=null; if(LUXPEND!=null)luxApply(LUXPEND);
  if(location.hash!=='#/'+id){try{history.replaceState(null,'','#/'+id);}catch(e){}}
  var app=document.getElementById('app'); if(app)app.scrollTop=0; if(window.kantScrollTo&&document.documentElement.classList.contains('flow'))kantScrollTo(0);
  if(window.postHeight)postHeight(true);
@@ -2347,7 +2427,7 @@ function goHome(){
 function route(){
  var id=(location.hash||'').replace('#/','').trim();
  var b=id&&brandById(id);
- if(b&&b.ready) openBrand(b.id); else goHome();
+ if(b&&b.ready&&!b.hidden) openBrand(b.id); else goHome();
 }
 /* ---------- 구성 목록 ---------- */
 function nextRoomName(base){
@@ -2382,12 +2462,16 @@ function addToCart(){
   item.name=typed?nextRoomName(typed):nextRoomName('거실');
   cart.push(item);
  }
+ if(LUXCUR!=null&&LUXIMPORT&&LUXIMPORT.items[LUXCUR]){
+  LUXIMPORT.items[LUXCUR].done=true; LUXCUR=null; renderLuxImport();
+ }
  renderCart();
  resetConfig();
  var nf=document.getElementById('cfgName'); if(nf)nf.value='';
 }
 function editItem(i){
  var it=cart[i]; if(!it)return;
+ LUXCUR=null;  /* 담긴 항목을 고치는 중이다. 도면에서 온 구 이름은 붙이지 않는다 */
  if(!BRAND||BRAND.id!==it.brand){ openBrand(it.brand); }
  state.material=materialOfColor(it.colorKey);
  state.color=it.colorKey; if(it.knobKey)state.knob=it.knobKey;
@@ -2523,6 +2607,12 @@ function openDoc(type){docType='quote';switchDoc();document.getElementById('over
 function switchDoc(){document.getElementById('docBody').innerHTML=docHTML();}
 function closeDoc(){document.getElementById('overlay').classList.remove('on');rmModal(false);}
 /* 견적서를 PNG 로 저장 — 외부 라이브러리 없이 SVG foreignObject 사용 */
+/* 내보내기(PDF·이미지) 공용 서체.
+   화면은 -apple-system(SF) 이지만 그건 사파리가 PDF 에 못 넣고,
+   SVG foreignObject 를 캔버스로 그릴 때도 해석되지 않아 세리프로 떨어진다.
+   실제 설치된 폰트 이름으로 지정해야 한다 — 한글은 툴 화면과 같은 Apple SD Gothic Neo. */
+var KANT_OUT_FONT='"Helvetica Neue","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Helvetica,Arial,sans-serif';
+
 function saveDocImage(){
  var el=document.querySelector('#docBody .pdoc'); if(!el)return;
  var btn=document.getElementById('imgBtn');
@@ -2545,7 +2635,9 @@ function saveDocImage(){
  var st=document.createElement('style');
  var own=document.getElementById('kantsw-style');
  var sts=own?[own]:[].slice.call(document.querySelectorAll('style'));
- st.textContent=sts.map(function(x){return x.textContent;}).join('\n');
+ st.textContent=sts.map(function(x){return x.textContent;}).join('\n')
+  /* SVG 안에서는 -apple-system 이 해석되지 않아 세리프로 떨어진다 → 실제 폰트로 못박는다 */
+  +'\n#kantsw,#kantsw *:not(svg):not(svg *){font-family:'+KANT_OUT_FONT+' !important}';
  wrap.appendChild(st); wrap.appendChild(clone);
  var xml;
  try{ xml=new XMLSerializer().serializeToString(wrap); }
@@ -2574,12 +2666,15 @@ function printDoc(){
  var tt='스위치견적요청'+(info.c?'_'+info.c:'')+'_'+d;
  var w=window.open('','_blank');
  if(!w){ alert('PDF 저장을 위해 팝업을 허용해 주세요. (브라우저 주소창의 팝업 차단 해제)'); return; }
- /* DOCTYPE 이 없으면 인쇄창이 쿽스 모드로 열려 표가 body 폰트를 상속하지 않는다
-    → 사파리에서 PDF 로 저장하면 표만 명조(AppleMyungjo)·Times 로 떨어진다.
+ /* ⚠️ 이 안에 스타일 태그 리터럴을 절대 쓰지 말 것.
+    인라인 빌드를 아임웹 코드섹션에 붙이면 아임웹이 JS 문자열 속 스타일 태그를
+    진짜 스타일시트로 끄집어내, 여기 선택자(html,body…)가 사이트 전체에 걸린다.
+    실제로 사이트 메뉴가 세리프로 바뀐 사고가 있었다. CSS 는 createElement 로 넣는다.
+    DOCTYPE 은 반드시 유지 — 없으면 쿽스 모드라 표가 body 폰트를 상속하지 않아
+    사파리 PDF 에서 표만 명조(AppleMyungjo)·Times 로 떨어진다.
     폰트도 -apple-system 은 사파리가 PDF 에 못 넣으므로 실제 설치 폰트 이름으로 지정한다. */
- var PFONT='"Helvetica Neue","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Helvetica,Arial,sans-serif';
- w.document.write('<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>'+tt+'</title>'
-  +'<style>html,body,h1,h2,h3,p,div,span,table,thead,tbody,tr,th,td,input{font-family:'+PFONT+'}'
+ var PFONT=KANT_OUT_FONT;
+ var PCSS='html,body,h1,h2,h3,p,div,span,table,thead,tbody,tr,th,td,input{font-family:'+PFONT+'}'
   +'html{-webkit-print-color-adjust:exact;print-color-adjust:exact}'
   +'body{padding:40px;color:#1a1a1a;-webkit-font-smoothing:antialiased;line-height:1.55}h1{font-size:24px}'
   +'table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}th,td{border:1px solid #ccc;padding:7px 10px;vertical-align:top}'
@@ -2589,7 +2684,14 @@ function printDoc(){
   +'.pf{position:relative;display:inline-block;vertical-align:top;line-height:0;max-width:100%}'
   +'.pf .pf-fr{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;border-radius:3px}'
   +'.pf .pf-mod{position:absolute;object-fit:fill}.pf .pf-empty,.pf .pf-hit{display:none}'
-  +'@media print{@page{margin:12mm}}</style></head><body>'+reqInner(lastItems,'print',info)+'</body></html>');
+  +'@media print{@page{margin:12mm}}';
+ var pd=w.document;
+ pd.open();
+ pd.write('<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"></head><body>');
+ pd.close();
+ pd.title=tt;
+ var pst=pd.createElement('style'); pst.appendChild(pd.createTextNode(PCSS)); pd.head.appendChild(pst);
+ pd.body.innerHTML=reqInner(lastItems,'print',info);
  w.document.close();w.focus();setTimeout(function(){w.print();},350);
 }
 function resetConfig(){
@@ -2600,7 +2702,12 @@ function resetConfig(){
 }
 /* 상단 단계 탭 */
 function goStep(n){var e=document.getElementById('step'+n);if(!e)return;
- if(document.documentElement.classList.contains('flow')&&window.kantScrollTo){kantScrollTo(e.getBoundingClientRect().top+(window.pageYOffset||0)-10);}
+ if(document.documentElement.classList.contains('flow')&&window.kantScrollTo){
+  var root=document.getElementById('kantsw');
+  /* 인라인 빌드: 툴 상단 기준 오프셋으로 넘기고 강제 이동. iframe 빌드는 종전대로 절대 y */
+  if(root) kantScrollTo(e.getBoundingClientRect().top-root.getBoundingClientRect().top-10,true);
+  else kantScrollTo(e.getBoundingClientRect().top+(window.pageYOffset||0)-10);
+ }
  else e.scrollIntoView({behavior:'smooth',block:'start'});}
 (function(){
  function upd(){
@@ -2610,6 +2717,31 @@ function goStep(n){var e=document.getElementById('step'+n);if(!e)return;
  }
  var sc=document.getElementById('app')||window;
  sc.addEventListener('scroll',upd,{passive:true}); window.addEventListener('scroll',upd,{passive:true}); setTimeout(upd,100);
+})();
+/* ---------- LUX PRO 에서 넘어온 구성 ----------
+   LUX PRO 회로도가 #/luxpro=<base64> 로 실어 보낸다. 두 툴 다 백엔드가 없어
+   해시로 넘긴다 — 서버를 거치지 않아 기록에 남지 않는다.
+   route() 가 해시를 지우므로 반드시 그 앞에서 읽는다. */
+var LUXIMPORT=null;
+(function(){
+ var m=(location.hash||'').match(/^#\/luxpro=(.+)$/);
+ if(!m)return;
+ try{
+  var b=m[1].replace(/-/g,'+').replace(/_/g,'/');
+  while(b.length%4)b+='=';
+  /* atob 는 바이트를 준다. 한글을 그대로 읽으면 깨지므로 UTF-8 로 되돌린다. */
+  var bin=atob(b), by=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i);
+  var d=JSON.parse(new TextDecoder().decode(by));
+  var items=(d&&d.items||[]).map(function(it,i){
+   return {i:i, room:String(it.room||'').trim()||('구성 '+(i+1)),
+           gang:Math.max(1,Math.min(8,parseInt(it.gang,10)||1)),
+           gangs:Array.isArray(it.gangs)?it.gangs:[], done:false};
+  });
+  if(items.length)LUXIMPORT={title:String(d.title||'').trim(),items:items};
+ }catch(e){}
+ /* 주소에서 지운다 — 새로고침 때 다시 들어오면 이미 담은 것과 어긋난다 */
+ try{history.replaceState(null,'','#/');}catch(e){}
 })();
 route();
 window.addEventListener('hashchange',route);
