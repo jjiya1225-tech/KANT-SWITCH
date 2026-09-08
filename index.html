@@ -238,9 +238,21 @@ padding:9px 11px;margin-top:10px;display:none}
 .luxrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
 .luxrow:first-child{border-top:none}
 .luxrow .lmain{flex:1;min-width:0}
-.luxrow .lname{font-size:13.5px;font-weight:700;letter-spacing:-.01em}
-.luxrow .lgang{font-size:11px;color:var(--sub);margin-top:3px;line-height:1.5;word-break:keep-all}
-.luxrow .lgang b{font-weight:600;color:#4a4a4a}
+.luxrow .lname{font-size:13.5px;font-weight:700;letter-spacing:-.01em;
+ display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+/* 공간 이름에도 번호가 붙는다(화장실 2). 구 수를 칩으로 떼어 두 숫자가
+   «화장실 2 2구» 처럼 붙어 읽히지 않게 한다. */
+.luxrow .lgn{font-size:10.5px;font-weight:700;color:var(--sub);background:#eef0f3;
+ border-radius:5px;padding:1.5px 5px;letter-spacing:0}
+/* 한 구의 내용이 두 줄에 걸치지 않게 구 단위로만 줄이 나뉜다. */
+.luxrow .lgang{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.5;
+ display:flex;flex-wrap:wrap;gap:3px 10px}
+.luxrow .lgang i{font-style:normal;display:inline-flex;align-items:center;gap:4px;
+ white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.luxrow .lgang i b{flex:none;font-weight:700;font-size:10px;color:#5b6470;
+ background:#eef0f3;border-radius:4px;padding:1px 4px}
+.luxrow.active .lgn{background:rgba(58,111,216,.12);color:var(--accent2)}
+.luxrow.active .lgang i b{background:rgba(58,111,216,.12);color:var(--accent2)}
 .luxrow .lbtn{border:1.5px solid var(--line);background:#fff;color:var(--accent);border-radius:8px;
  padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
 .luxrow .lbtn:hover{border-color:var(--accent);background:var(--accent);color:#fff}
@@ -2363,6 +2375,13 @@ function luxSyncSplit(){
  if(home.style.display!=='none')home.style.display=on?'grid':'block';
 }
 window.addEventListener('resize',luxSyncSplit);
+/* «거실 1», «화장실 2-1» 처럼 공간 이름에 번호만 붙은 자동 이름인가 */
+function luxIsAutoName(nm,room){
+ if(!room)return false;
+ if(nm===room)return true;
+ if(nm.indexOf(room)!==0)return false;
+ return /^[\s\-–_·.]*\d*$/.test(nm.slice(room.length));
+}
 function renderLuxImport(){
  var box=document.getElementById('luxImport'); if(!box)return;
  var home=document.getElementById('homeView');
@@ -2379,17 +2398,21 @@ function renderLuxImport(){
   ? ((LUXIMPORT.title?luxEsc(LUXIMPORT.title)+' · ':'')+'하나씩 눌러 브랜드와 색을 고르세요.')
   : '모두 구성했습니다. 아래 «구성 목록»에서 확인하세요.';
  document.getElementById('luxList').innerHTML=items.map(function(it){
-  /* 구가 무엇을 켜는지는 회로 이름과 조명 종류다. 회로 이름을 진하게 두어
-     한 줄에서도 «몇 번 구가 어디»인지 먼저 읽히게 한다. */
+  /* 회로 이름은 «거실 1» 처럼 공간 이름을 되풀이한다. 줄마다 공간 이름이
+     또 나오면 읽을 것만 늘어나므로, 되풀이되는 앞머리는 떼고 «몇 구가
+     무엇을 켜는지»만 남긴다. 직접 지은 이름은 정보이므로 그대로 둔다. */
   var gl=(it.gangs||[]).map(function(g,i){
-   if(!g) return '<b>'+(i+1)+'</b> 비어 있음';
+   var tag='<b>'+(i+1)+'구</b>';
+   if(!g) return '<i>'+tag+' 비어 있음</i>';
    var dot=g.indexOf(' · ');
-   var nm=dot<0?g:g.slice(0,dot), load=dot<0?'':g.slice(dot+3);
-   return '<b>'+(i+1)+'</b> '+luxEsc(nm)+(load?' <span>'+luxEsc(load)+'</span>':'');
-  }).join('&nbsp; · &nbsp;');
+   var nm=dot<0?'':g.slice(0,dot), load=dot<0?g:g.slice(dot+3);
+   if(nm&&luxIsAutoName(nm,it.room))nm='';
+   return '<i>'+tag+' '+luxEsc(nm?nm+' '+load:load)+'</i>';
+  }).join('');
   var on=(LUXPEND===it.i)||(LUXCUR===it.i);
   return '<div class="luxrow'+(it.done?' done':'')+(on?' active':'')+'">'
-   +'<div class="lmain"><div class="lname">'+luxEsc(it.room)+' '+it.gang+'구</div>'
+   +'<div class="lmain"><div class="lname">'+luxEsc(it.room)
+   +' <span class="lgn">'+it.gang+'구</span></div>'
    +(gl?'<div class="lgang">'+gl+'</div>':'')+'</div>'
    +'<button class="lbtn" onclick="luxPick('+it.i+')">'+(it.done?'다시':'구성하기')+'</button>'
    +'</div>';
@@ -2403,7 +2426,7 @@ function luxPick(i){
  var it=LUXIMPORT.items[i];
  renderLuxImport();   /* 고른 줄에 테두리가 생긴다 */
  var sub=document.getElementById('luxSub');
- if(sub)sub.innerHTML='<b>'+luxEsc(it.room)+' '+it.gang+'구</b> 를 구성합니다. 오른쪽에서 브랜드를 고르세요.';
+ if(sub)sub.innerHTML='<b>'+luxEsc(it.room)+'</b> · '+it.gang+'구 를 구성합니다. 오른쪽에서 브랜드를 고르세요.';
  var g=document.getElementById('brandGrid');
  if(g){ if(window.kantScrollTo)kantScrollTo(g.getBoundingClientRect().top+(window.pageYOffset||0)-10,true);
   else g.scrollIntoView({behavior:'smooth',block:'start'}); }
