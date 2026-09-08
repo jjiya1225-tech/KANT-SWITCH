@@ -216,18 +216,24 @@ padding:9px 11px;margin-top:10px;display:none}
 .cart h3{font-size:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .cart h3 .cnt{font-size:11px;background:#eee;border-radius:20px;padding:2px 9px;color:var(--sub)}
 /* LUX PRO 도면에서 가져온 구성 */
-.luximp{padding:18px 22px;margin-bottom:18px;border-color:var(--accent2)}
-.luximp h3{font-size:14px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.luximp{padding:16px 20px;margin-bottom:18px}
+.luximp h3{font-size:14px;margin-bottom:3px;display:flex;align-items:center;gap:8px}
 .luximp h3 .cnt{font-size:11px;background:rgba(58,111,216,.1);border-radius:20px;padding:2px 9px;color:var(--accent2);font-weight:700}
-.luximp .lsub{font-size:12px;color:var(--sub);margin-bottom:10px;word-break:keep-all;line-height:1.5}
-.luxrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.luximp .lsub{font-size:12px;color:var(--sub);margin-bottom:8px;word-break:keep-all;line-height:1.5}
+/* 스위치가 아홉 개쯤 되면 브랜드 카드가 화면 밖으로 밀린다.
+   목록만 스크롤시켜 «무엇을 고를지»가 늘 보이게 한다. */
+.luxlist{max-height:236px;overflow-y:auto;margin:0 -4px;padding:0 4px}
+.luxrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.luxrow:first-child{border-top:none}
 .luxrow .lmain{flex:1;min-width:0}
-.luxrow .lname{font-size:13px;font-weight:700}
-.luxrow .lgang{font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.45;word-break:keep-all}
-.luxrow .lbtn{border:1.5px solid var(--accent2);background:#fff;color:var(--accent2);border-radius:8px;
- padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-.luxrow .lbtn:hover{background:var(--accent2);color:#fff}
-.luxrow.done{opacity:.48}
+.luxrow .lname{font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+.luxrow .lgang{font-size:11px;color:var(--sub);margin-top:3px;line-height:1.5;word-break:keep-all}
+.luxrow .lgang b{font-weight:600;color:#4a4a4a}
+.luxrow .lbtn{border:1.5px solid var(--line);background:#fff;color:var(--accent);border-radius:8px;
+ padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+.luxrow .lbtn:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+.luxrow.done{opacity:.5}
+.luxrow.done .lname::after{content:' ✓';color:var(--ok)}
 .luxrow.done .lbtn{border-color:var(--line);color:var(--sub);background:#fff}
 .posbtn .pl{font-size:10px;color:var(--accent2);margin-top:3px;line-height:1.3;word-break:keep-all}
 .citem{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:9px;font-size:12.5px}
@@ -446,7 +452,7 @@ html.flow .thumbs{max-height:calc(var(--vh,100vh) * .56)}
 <section class="card luximp" id="luxImport" style="display:none">
 <h3>LUX PRO 도면에서 가져옴 <span class="cnt" id="luxCnt">0개</span></h3>
 <div class="lsub" id="luxSub"></div>
-<div id="luxList"></div>
+<div class="luxlist" id="luxList"></div>
 </section>
 <div class="bgrid" id="brandGrid"></div>
 <section class="card cart" id="homeCart" style="display:none;margin-top:22px">
@@ -2335,16 +2341,22 @@ function renderLuxImport(){
  box.style.display='block';
  var items=LUXIMPORT.items, left=items.filter(function(it){return !it.done;}).length;
  document.getElementById('luxCnt').textContent=items.length+'개';
- document.getElementById('luxSub').innerHTML=
-  (LUXIMPORT.title?'<b>'+luxEsc(LUXIMPORT.title)+'</b> · ':'')
-  +'도면에서 스위치 '+items.length+'개를 받았습니다.'
-  +(left?' 하나씩 눌러 브랜드와 색을 고르면 구성 목록에 담깁니다.':' 모두 담았습니다.');
+ document.getElementById('luxSub').innerHTML= left
+  ? ((LUXIMPORT.title?luxEsc(LUXIMPORT.title)+' · ':'')+'하나씩 눌러 브랜드와 색을 고르세요.')
+  : '모두 구성했습니다. 아래 «구성 목록»에서 확인하세요.';
  document.getElementById('luxList').innerHTML=items.map(function(it){
-  var gl=(it.gangs||[]).map(function(g,i){return (i+1)+'. '+(g?luxEsc(g):'미지정');}).join(' · ');
+  /* 구가 무엇을 켜는지는 회로 이름과 조명 종류다. 회로 이름을 진하게 두어
+     한 줄에서도 «몇 번 구가 어디»인지 먼저 읽히게 한다. */
+  var gl=(it.gangs||[]).map(function(g,i){
+   if(!g) return '<b>'+(i+1)+'</b> 비어 있음';
+   var dot=g.indexOf(' · ');
+   var nm=dot<0?g:g.slice(0,dot), load=dot<0?'':g.slice(dot+3);
+   return '<b>'+(i+1)+'</b> '+luxEsc(nm)+(load?' <span>'+luxEsc(load)+'</span>':'');
+  }).join('&nbsp; · &nbsp;');
   return '<div class="luxrow'+(it.done?' done':'')+'">'
    +'<div class="lmain"><div class="lname">'+luxEsc(it.room)+' '+it.gang+'구</div>'
    +(gl?'<div class="lgang">'+gl+'</div>':'')+'</div>'
-   +'<button class="lbtn" onclick="luxPick('+it.i+')">'+(it.done?'다시 구성':'구성하기')+'</button>'
+   +'<button class="lbtn" onclick="luxPick('+it.i+')">'+(it.done?'다시':'구성하기')+'</button>'
    +'</div>';
  }).join('');
 }
